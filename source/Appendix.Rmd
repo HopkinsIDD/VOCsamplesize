@@ -1,0 +1,176 @@
+---
+editor_options:
+  chunk_output_type: console
+fontsize: 11pt
+output:
+  pdf_document:
+    includes:
+      in_header: preamble.tex
+    number_sections: yes
+  html_document:
+    df_print: paged
+documentclass: article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir="../")
+knitr::opts_chunk$set(fig.width=10, fig.height=8, warning=FALSE, message=FALSE,cache=FALSE)
+options(tinytex.verbose = TRUE)
+```
+
+\pagestyle{fancy}
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
+
+\begin{Large}
+\textbf{Appendix}\vspace{4px}
+\vspace{10px}
+\end{Large}
+
+\appendix
+
+\section{Calculating variant prevalences from an observed sample}
+
+Given the coefficient of detection ($C_{V_i}$) for each variant in the pathogen population, we can calculate the actual prevalence of each variant ($P_{V_i}$) from what we observed in the pool of high quality detected infections ($H$). In the sections below, we use a property of odds ratios to calculate a correction factor $q$ that allows for this conversion.
+
+\subsection{Correction factor in a 2-variant system}
+
+In a two-variant system (i.e., a system with one variant of interest, $V_i$, that is compared to the rest of the population, $V_2$), the odds of $V_1$ is:
+$$\text{odds}_{V_1}=\frac{P_{V_1}}{P_{V_2}}=\frac{P_{V_1}}{1-P_{V_1}}$$
+
+Similarly, the observed odds (the odds of $P_{V_1}$ in $H$) is:
+$$\text{odds}^*_{V_1}=\frac{P^*_{V_1}}{P^*_{V_2}}=
+\frac{\frac{C_{V_1}P_{V_1}N}{C_{V_1}P_{V_1}N+C_{V_2}P_{V_2}N}}
+{\frac{C_{V_2}P_{V_2}N}{C_{V_1}P_{V_1}N+C_{V_2}P_{V_2}N}}=
+\frac{C_{V_1}P_{V_1}}{C_{V_2}P_{V_2}}=
+\frac{C_{V_1}P_{V_1}}{C_{V_2}(1-P_{V_1})}$$
+
+We define a bias factor, $q$, such that:
+$$\text{odds}_{V_1}=q\times\text{odds}^*_{V_1}$$
+$$\frac{P_{V_1}}{1-P_{V_1}}=q\times\frac{C_{V_1}P_{V_1}}{C_{V_2}(1-P_{V_1})}$$
+
+If we solve the above equation for $q$, we obtain: 
+$$q=\frac{C_{V_2}}{C_{V_1}}$$.
+
+Because we know that: $P_{V_i}=\frac{\text{odds}_{V_i}}{1+\text{odds}_{V_i}}$, we can use the correction factor $q$ to easily calculate the true proportion of any variant $i$ in a population from its observed proportion in the sample $H$:
+$$P_{V_i}=\frac{\text{odds}_{V_i}}{1+\text{odds}_{V_i}}=\frac{q(\text{odds}^*_{V_i})}{1+q(\text{odds}^*_{V_i})}$$
+
+
+\subsection{Correction factor in a 3-variant system}
+
+In a 3-variant system, the odds of $V_1$ are as follows:
+$$\text{odds}^*_{V_1}=\frac{P^*_{V_1}}{P^*_{V_2}+P^*_{V_3}}=
+\frac{\frac{C_{V_1}P_{V_1}N}{C_{V_1}P_{V_1}N+C_{V_2}P_{V_2}N+C_{V_3}P_{V_3}N}}
+{\frac{C_{V_2}P_{V_2}N+C_{V_3}P_{V_3}N}{C_{V_1}P_{V_1}N+C_{V_2}P_{V_2}N+C_{V_3}P_{V_3}N}}=
+\frac{C_{V_1}P_{V_1}}{C_{V_2}P_{V_2}+C_{V_3}P_{V_3}}$$
+
+Using this, we can calculate $q_{V_{1,123}}$, the correction factor between the true and observed odds when $V_1$ is the variant of interest in a 3-variant system with $V_1$, $V_2$,and $V_3$:
+
+\begin{align*}
+  \frac{P_{V_1}}{1-P_{V_1}}
+  &=q\times\frac{C_{V_1}P_{V_1}}{C_{V_2}P_{V_2}+C_{V_3}P_{V_3}}=
+  q\times\frac{C_{V_1}P_{V_1}}{(C_{V_2}P_{V_2}+C_{V_3}P_{V_3})(\frac{1-P_{V_1}}{1-P_{V_1}})}\\[10pt]
+  &=q\Big(\frac{P_{V_1}}{1-P_{V_1}}\Big)
+  \frac{C_{V_1}}{\frac{C_{V_2}P_{V_2}}{1-P_{V_1}}+\frac{C_{V_3}P_{V_3}}{1-P_{V_1}}}\\[10pt]
+  &=q\Big(\frac{P_{V_1}}{1-P_{V_1}}\Big)
+  \frac{C_{V_1}}{\frac{C_{V_2}P_{V_2}}{P_{V_2}+P{V_3}}+\frac{C_{V_3}P_{V_3}}{P_{V_2}+P{V_3}}}\\[10pt]
+  &=q\Big(\frac{P_{V_1}}{1-P_{V_1}}\Big)
+  \frac{C_{V_1}}{C_{V_2}\Big(\frac{P_{V_2}}{P_{V_2}+P{V_3}}\Big)+
+  C_{V_3}\Big(\frac{P_{V_3}}{P_{V_2}+P{V_3}}\Big)}
+\end{align*}
+
+At this point, we recognize that $\frac{P_{V_2}}{P_{V_2}+P_{V_3}}$ is equivalent to $P_{V_2}$ if variants 2 and 3 are the only variants in that system. Assuming a 2-variant system with variants 2 and 3 only, we can use the results of the previous section to write $P_{V_2}$ as a function of the observed odds in this system:
+$$P_{V_2}=\frac{q_{V_{2,23}}\text{odds}^*_{V_{2,23}}}{1+q_{V_{2,23}}\text{odds}^*_{V_{2,23}}}$$
+where $\text{odds}^*_{V_{2,23}}$ is the observed odds of $V_2$ in this 2-variant system with $V_2$ and $V_3$ (i.e., $\frac{P^*_{V_2}}{P^*_{V_3}}$) and $q_{V_{2,23}}$ is the correction factor in this system (which we know to be equal to $\frac{C_{V_3}}{C_{V_2}}$). Therefore, we can continue our calculation of $q_{V_{1,123}}$ by substituting these values as follows:
+
+\begin{align*}
+  \frac{P_{V_1}}{1-P_{V_1}}
+  &=q\Big(\frac{P_{V_1}}{1-P_{V_1}}\Big)
+  \frac{C_{V_1}}
+  {C_{V_2}\frac{q_{V_{2,23}}\text{odds}^*_{V_{2,23}}}{1+q_{V_{2,23}}\text{odds}^*_{V_{2,23}}}+
+  C_{V_3}\frac{q_{V_{3,23}}\text{odds}^*_{V_{3,23}}}{1+q_{V_{3,23}}\text{odds}^*_{V_{3,23}}}}\\[10pt]
+  q&=\frac{1}{C_{V_1}}
+  \Big(C_{V_2}\frac{q_{V_{2,23}}\text{odds}^*_{V_{2,23}}}{1+q_{V_{2,23}}\text{odds}^*_{V_{2,23}}}+
+  C_{V_3}\frac{q_{V_{3,23}}\text{odds}^*_{V_{3,23}}}{1+q_{V_{3,23}}\text{odds}^*_{V_{3,23}}}\Big)
+\end{align*}
+
+
+\subsection{Correction factor in an n-variant system}
+
+We can extend the conclusion above to derive a formula for the correction factor $q$ in a system with $n$ variants:
+$$q_{V_{1,12..n}}=\frac{1}{C_{V_1}}
+\Big(C_{n}\frac{q_{V_{n,2..n}}(odds^*_{V_{n,2..n}})}{1+q_{V_{n,2..n}}(odds^*_{V_{n,2..n}})}+
+C_{n-1}\frac{q_{V_{n-1,2..n}}(odds^*_{V_{n-1,2..n}})}{1+q_{V_{n-1,2..n}}(odds^*_{V_{n-1,2..n}})}+
+...+C_{2}\frac{q_{V_{2,2..n}}(odds^*_{V_{2,2..n}})}{1+q_{V_{2,2..n}}(odds^*_{V_{2,2..n}})}\Big)$$
+
+The exact value of $q$, and therefore the true value of $P_{V_1}$, can be calculated recursively given only the coefficients of detection and observed proportions of the variants in the population.
+
+\section{Sample size calculations with continuous surveillance}
+
+\subsection{Sample size calculation for varaint detection on or before time $t$}
+
+The probability of detecting a variant (i.e., generating one or more high quality sequences indicating a patient was infected by this variant) on or before time $t$ is equal to one minus the probability of not detecting it at any time between $t_0$ and $t$. In other words, regardless of the time unit used, this probability can be written as:
+$$\Pr(d\le t)=1-\prod_{x=0}^{t}\Big[1-\Pr(\text{detection at time }x)\Big]$$
+
+Assuming a binomial sampling process, the probability of detection at time $x$ is equal to one minus the probability of not detecting the variant:
+$$\Pr(\text{detection at time }x)=1-(1-P_x)^n$$
+
+Where $n$ is the sample size and $P_x$ is the prevalence of the variant at this time step. Therefore, we can write the probability of detecting the variant on or before time $t$ as:
+$$\Pr(d\le t)=1-\prod_{x=0}^{x=t}\Big[1-(1-(1-P_x)^n)\Big]=
+1-\prod_{x=0}^{x=t}\Big(1-P_x\Big)^n$$
+
+Where $n$ is the per-time step sample size and $P_x$ is the prevalence of the variant at time $x$. This assumes the same number of samples are selected at every time step, and that the prevalence of the variant at each time step is known. We can rewrite this equation to solve for the per-time step sample size:
+$$n=\frac{\ln[1-\Pr(d\le t)]}{\ln[\prod_{x=0}^{t}(1-P_x)]}$$
+
+We can approximate the value of the product with a continuous function using the Volterra product integral. For a scalar function $f$ and real values of $a$ and $b$:
+$$\prod_a^b\Big(1+f(x)dx\Big)=
+\lim_{\Delta x\rightarrow0}\prod\Big(1+f(x_i)\Delta x\Big)=
+\exp\Big(\int_a^b f(x)dx\Big)$$
+
+Let $f(x)=-P_xdx$. This allows us to write the product of $1-P_x$ as:
+$$\prod_{x=0}^{t}\Big(1+(-P_xdx)\Big)=\exp\Big(\int_0^t-P_xdx\Big)=\frac{1}{\exp(\int_0^tP_x dx)}$$
+
+If we plug this into our per-time step sample size calculation we get:
+$$n=\frac{\ln[1-\Pr(d\le t)]}{\ln[\frac{1}{\exp(\int_0^tP_x dx)}]}=
+\frac{\ln[1-\Pr(d\le t)]}{\ln(1)-\ln[\exp(\int_0^t P_x dx)]}=
+-\frac{\ln[1-\Pr(d\le t)]}{\int_0^t P_x dx}=
+-\frac{\ln[1-\Pr(d\le t)]}{G(t)-G(0)}$$
+
+Where $G(t)$ is the integral of $g(t)$. In other words, $G(t)$ is the cumulative density function of the growth function ($g(t)=P_x dx$) used to model the change in the variant frequency over time.
+
+\subsection{Logistic growth of variant frequency}
+
+Growth in prevalence of variants of interest (i.e., variants with some fitness advantage) are often modeled by logistic growth functions. In other words:
+$$g(t)=\frac{1}{1+ae^{-rt}}$$
+
+Where $r$ is the per-time step growth rate and $a=\frac{1}{t_0}-1$. The cumulative density of this probability distribution can be computed as follows:
+
+\begin{align*}
+  G(t)=\int\frac{1}{1+ae^{-rt}}dt
+  &=\int\Big(\frac{e^{rt}}{e^{rt}}\Big)\frac{1}{1+ae^{-rt}}dt
+  =\int\frac{e^{rt}}{e^{rt}+a}dt\\[10pt]
+  &=\int\frac{1}{u}\frac{du}{r}
+  =\frac{1}{r}\int\frac{1}{u}du
+  =\frac{1}{r}\ln|u|\\[10pt]
+  &=\frac{1}{r}\ln|a+e^{rt}|+C
+\end{align*}
+
+Where $u=e^{rt}+a$.
+
+\subsection{Logistic growth of variant frequency with biased detection}
+
+In a two-variant system, the observed prevalence of a particular variant of interest in a sample of high quality detected infections ($H$) is a function of the true prevalence and the ratio between coefficients of detection:
+$$\text{observed frequency}=\frac{P_{V_1}}{P_{V_1}+\frac{C_{V_2}}{C_{V_1}}P_{V_2}}$$
+
+Assuming $P_{V_1}$ can be computed at any given time step using a logistic model, we can calculate the observed frequency distribution as follows:
+$$\text{observed frequency}=
+\frac{\frac{1}{1+ae^{-rt}}}{\frac{1}{1+ae^{-rt}}+\frac{C_{V_2}}{C_{V_1}}(1-\frac{1}{1+ae^{-rt}})}=
+\frac{1}{1+\frac{C_{V_2}}{C_{V_1}}ae^{-rt}}=
+\frac{1}{1+be^{-rt}}$$
+
+Where $b=a\frac{C_{V_2}}{C_{V_1}}=(\frac{C_{V_2}}{C_{V_1}})(\frac{1}{t_0}-1)$.
+
+Because in this case the observed frequency function takes the same form as the actual frequency function, we can easily calculate $G^*(t)$, the cumulative density of the observed variant frequency:
+$$G^*(t)=\frac{1}{r}\ln|b+e^{rt}|+C$$
