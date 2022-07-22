@@ -174,3 +174,34 @@ Where $b=a\frac{C_{V_2}}{C_{V_1}}=(\frac{C_{V_2}}{C_{V_1}})(\frac{1}{t_0}-1)$.
 
 Because in this case the observed frequency function takes the same form as the actual frequency function, we can easily calculate $G^*(t)$, the cumulative density of the observed variant frequency:
 $$G^*(t)=\frac{1}{r}\ln|b+e^{rt}|+C$$
+
+\subsection{Sample size calculation for determining variant prevalence from $t$ measurements}
+
+We can calculate the mean of multiple prevalence estimates to refine our estimate of variant frequency in a population. Using a weighted mean allows us to give more value to recent measurements. Given a particular weighting scheme, we can calculate the number of sequences needed per measurement ($n$) using the effective sample size.
+
+Binomial theory tells use that the effective sample size of independent observations (i.e., prevalence estimates drawn from $n$ sequences) is a value such that:
+$$\operatorname{Var}(\hat{\mu})=\frac{\sigma^2}{n_{\text{eff}}}$$
+
+Where $\mu^2$ is the mean of the estimates across all samples and $\sigma^2$ is the variance of the underlying distribution (i.e., a Bernoulli distribution, since each sequence can be either the variant of interest or not the variant of interest, with probability $p$ --- the true prevalence of the variant in the population).
+
+We also know that the the variance of each prevalence estimate is:
+$$\operatorname{Var}(s_i)=\frac{pq}{n}$$
+
+Where $n$ is the number of sequences used in that prevalence estimate, $p$ is the true prevalence of the variant in the population, and $q=1-p$.
+
+If we assume that each prevalence estimate is made from the same number of sequences ($n$) and that the true prevalence is roughly equal across time points, we can calculate the variance of the mean of multiple prevalence estimates given a particular weighting scheme:
+$$\operatorname{Var}(\hat{\mu})=\operatorname{Var}\big(\sum_{i=1}^t w_i s_i\big)=
+\operatorname{Var}(s_i)\sum_{i=1}^t w_i^2=\frac{pq}{n}\sum_{i=1}^t w_i^2$$
+
+Where $w$ is the weight of the prevalence estimate from timepoint $i$ and $t$ is the total number of timepoints considered in each weighted estimate.
+
+If the weights do not sum to one, we need to scale this estimate by the sum of the weights:
+$$\operatorname{Var}(\hat{\mu})=
+\operatorname{Var}\big(\frac{\sum_{i=1}^t w_i s_i}{\sum_{i=1}^t w_i}\big)=
+\frac{1}{\big(\sum_{i=1}^t w_i\big)^2}\operatorname{Var}\big(\sum_{i=1}^t w_i s_i\big)=
+\frac{\sum_{i=1}^t w_i^2}{\big(\sum_{i=1}^t w_i\big)^2}\big(\frac{pq}{n}\big)
+$$
+
+Since we know that $\sigma^2=pq$:
+$$n_{\text{eff}}=
+n\frac{\big(\sum_{i=1}^t w_i\big)^2}{\sum_{i=1}^t w_i^2}$$
