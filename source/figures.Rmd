@@ -18,7 +18,7 @@ library(gridExtra)
 library(RColorBrewer)
 library(metR)
 
-source("source/math_funcs.R")
+library(phylosamp)
 source("source/plot_funcs.R")
 
 ```
@@ -66,10 +66,10 @@ precision <- 0.25
 
 # calculate bias based on desired coefficient ratios
 # for a small number of input variant proportions
-p <- c(0.1,seq(0.2,1,0.2))
+p <- c(0.1,seq(0.2,0.99,0.2))
 b <- expand.grid(p,c_ratio)
 colnames(b) <- c("p_v1","c_ratio")
-mbias <- apply(b,1,function(x) calc.expected.mbias(x["p_v1"][[1]],x["c_ratio"][[1]]))
+mbias <- apply(b,1,function(x) phylosamp::calc_expected_mbias(x["p_v1"][[1]],x["c_ratio"][[1]]))
 
 # create data frame needed for plotting
 df <- data.frame(b,c_ratio,mbias)
@@ -78,7 +78,7 @@ df <- data.frame(b,c_ratio,mbias)
 blue = brewer.pal(n = 9, "Blues")[4:9]
 
 bias_plot <- ggplot(data = df, aes(x=c_ratio, y=mbias)) +
-  geom_line(aes(color=factor(p_v1)),size=1) +
+  geom_line(aes(color=factor(p_v1)),linewidth=1) +
   scale_y_continuous(expand = c(0.02,0), limits = c(1,2.5)) +
   scale_x_continuous(expand = c(0.02,0)) +
   scale_colour_manual(values=blue,name=expression(P[V[1]])) +
@@ -101,7 +101,7 @@ bias_plot <- ggplot(data = df, aes(x=c_ratio, y=mbias)) +
 p <- seq(0.02,0.1,0.02)
 b <- expand.grid(p,c_ratio)
 colnames(b) <- c("p_v1","c_ratio")
-n <- apply(b,1,function(x) calc.samplesize.detect(x["p_v1"][[1]],prob_detect,x["c_ratio"][[1]]))
+n <- apply(b,1,function(x) phylosamp::calc_samplesize_detect(x["p_v1"][[1]],prob_detect,x["c_ratio"][[1]]))
 
 # create data frame needed for plotting
 df <- data.frame(b,n)
@@ -110,7 +110,7 @@ df <- data.frame(b,n)
 red = brewer.pal(n = 9, "Reds")[4:9]
 
 ss_detect <- ggplot(data = df, aes(x=c_ratio, y=n)) +
-  geom_line(aes(color=factor(p_v1)),size=1) +
+  geom_line(aes(color=factor(p_v1)),linewidth=1) +
   scale_colour_manual(values=red,name=expression(P[V[1]])) +
   scale_y_continuous(expand = c(0.02,0), limits = c(0,150), breaks = c(0,50,100,150)) +
   scale_x_continuous(expand = c(0.02,0)) +
@@ -130,16 +130,16 @@ ss_detect <- ggplot(data = df, aes(x=c_ratio, y=n)) +
 
 # calculate sample size based on these coefficient ratios
 # for a small number of input variant proportions
-p <- c(0.1,seq(0.2,1,0.2))
+p <- c(0.1,seq(0.2,0.99,0.2))
 b <- expand.grid(p,c_ratio)
 colnames(b) <- c("p_v1","c_ratio")
-n <- apply(b,1,function(x) calc.samplesize.prev(x["p_v1"][[1]],conf_measure,precision,x["c_ratio"][[1]]))
+n <- apply(b,1,function(x) phylosamp::calc_samplesize_prev(x["p_v1"][[1]],conf_measure,precision,x["c_ratio"][[1]]))
 
 # create data frame needed for plotting
 df <- data.frame(b,n)
 
 ss_prev <- ggplot(data = df, aes(x=c_ratio, y=n)) +
-  geom_line(aes(color=factor(p_v1)),size=1) +
+  geom_line(aes(color=factor(p_v1)),linewidth=1) +
   scale_colour_manual(values=blue,name=expression(P[V[1]])) +
   scale_y_continuous(expand = c(0.02,0), limits = c(0,500), breaks = seq(0,500,100)) +
   scale_x_continuous(expand = c(0.02,0)) +
@@ -177,7 +177,7 @@ r <- 0.1
 t0 <- 1/10000
 
 # daily sample sizes to explore
-n <- seq(0,500,10)
+n <- seq(1,500,10)
 
 # c ratios to explore
 c_ratios <- c(1,2,3)
@@ -193,13 +193,13 @@ colnames(b) <- c("t","n")
 df <- data.frame(b)
 
 for (c in c_ratios){
-  prob <- apply(b,1,function(x) calc.prob.detect.cont(x["n"][[1]],x["t"][[1]],t0,r,c))
+  prob <- apply(b,1,function(x) phylosamp::calc_prob_detect_cont(x["n"][[1]],x["t"][[1]],t0,r,c))
   df <- data.frame(df,prob)
 }
 
 colnames(df) <- c("t","n",c_labels)
 
-prev_breaks <- sapply(seq(0,40,10),calc.freq.logistic,t0,r)
+prev_breaks <- sapply(seq(0,40,10),phylosamp::calc_freq_logistic,t0,r)
 prev_labels <- sprintf("%.4f", prev_breaks)
 
 plots <- lapply(1:length(c_ratios), function(x) plot.ss.logistic(df,c_ratios[x],c_labels[x],t0,r))
@@ -213,7 +213,7 @@ t <- seq(0,180,1)
 df <- data.frame(t)
 
 for (c in c_ratios){
-  g <- sapply(t,calc.freq.logistic,t0,r,c)
+  g <- sapply(t,phylosamp::calc_freq_logistic,t0,r,c)
   df <- data.frame(df,g)
 }
 
