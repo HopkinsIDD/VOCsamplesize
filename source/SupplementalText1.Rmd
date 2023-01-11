@@ -13,7 +13,7 @@ documentclass: article
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_knit$set(root.dir="../")
+#knitr::opts_knit$set(root.dir="../")
 knitr::opts_chunk$set(fig.width=10, fig.height=8, warning=FALSE, message=FALSE,cache=FALSE)
 options(tinytex.verbose = TRUE)
 ```
@@ -24,12 +24,9 @@ options(tinytex.verbose = TRUE)
 \fancyfoot{}
 \fancyfoot[R]{\thepage}
 
-\begin{Large}
-\textbf{Appendix}\vspace{4px}
-\vspace{10px}
-\end{Large}
+\setcounter{page}{7}
 
-\appendix
+\section*{Supplemental Text 1: Derivations}
 
 \section{Calculating variant prevalences from an observed sample}
 
