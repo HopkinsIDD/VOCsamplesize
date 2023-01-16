@@ -43,7 +43,7 @@ plot.ss.logistic <- function(df,c_ratio,c_label,t0,r){
   
   f <- sym(c_label)
   
-  prev_breaks <- sapply(seq(0,40,10),phylosamp::calc_freq_logistic,t0,r)
+  prev_breaks <- sapply(seq(0,40,10),phylosamp::varfreq_freq_logistic,t0,r)
   prev_labels <- sprintf("%.4f", prev_breaks)
   
   ggplot(df,aes(x=t,y=n,fill=!!f)) +
@@ -52,7 +52,7 @@ plot.ss.logistic <- function(df,c_ratio,c_label,t0,r){
     geom_text_contour(aes(z = !!f), breaks=c(0.5,0.95)) +
     scale_fill_gradient(low="light yellow", high="blue",name="Pr(d ≤ t)",limits=c(0,1)) +
     scale_x_continuous(limits=c(-1,41),expand = c(0,0),
-                       sec.axis = sec_axis(trans = ~ phylosamp::calc_freq_logistic(.,t0,r),
+                       sec.axis = sec_axis(trans = ~ phylosamp::varfreq_freq_logistic(.,t0,r),
                                            name="Prevalence",breaks=prev_breaks,labels=prev_labels)) +
     scale_y_continuous(expand = c(0.01,0)) +
     labs(x="Days",y="Sample size per day") +
