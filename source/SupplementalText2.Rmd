@@ -48,7 +48,7 @@ Now that we've identified our surveillance goals, we need to estimate some basic
 
 \section{The coefficient of detection ratio}
 
-Once we have estimated the parameter ranges of interest, we can calculate the _coefficient of detection_ in the most and least conservative scenarios. We can do this using the Excel spreadsheet provided as Supplemental Data 1 or using the `cod_varfreq_ratio` function of the R package `phylosamp`.
+Once we have estimated the parameter ranges of interest, we can calculate the _coefficient of detection_ in the most and least conservative scenarios. We can do this using the Excel spreadsheet provided as Supplemental Data 1 or using the `vartrack_cod_ratio()` function of the R package `phylosamp`.
 
 When calculating the coefficient of detection, keep in mind that the $\gamma$ parameter can be left out (R package) or set to $1$ (under "Average proportion of samples below Ct threshold") for both the variant of interest and general population parameters, since (as discussed above) we are assuming that this parameter does not change between variants. In the least conservative scenario as described above, the testing sensitivity $\phi$ also does not differ between potential new variants and the currently circulating pathogen population.
 
@@ -66,13 +66,13 @@ Given these results, we can move forward to sample size calculations with two va
 
 \section{Sample size calculations}
 
-Once we have determined the range of scenarios we'd like to explore, we can perform sample size calculations using the appropriate tab/function of the Excel spreadsheet or R package, respectively. As our aim is to ensure variant detection using a periodic sampling strategy, we need to use the "Detect (Periodic) - Sample Size" tab of the Excel spreadsheet or the `samplesize_varfreq_detect` function of the `phylosamp` R package.
+Once we have determined the range of scenarios we'd like to explore, we can perform sample size calculations using the appropriate tab/function of the Excel spreadsheet or R package, respectively. As our aim is to ensure variant detection using a periodic sampling strategy, we need to use the "Detect (Periodic) - Sample Size" tab of the Excel spreadsheet or the `vartrack_samplesize_detect()` function of the `phylosamp` R package.
 
 In both cases, there are a few more parameters we need to provide:
 
 \textbf{The desired probability of detection ($prob$)}. We can again select a parameter range to explore for our sample size calculations. In our case, we want to ensure a good chance of detecting a new variant of Pathogen X when it enters our country, so we will explore probabilities of detection between 75\% (least conservative) to 95\% (most conservative).
 
-\textbf{The desired variant prevalence ($p_{\text{detect}}$)}. As stated above, we want to ensure we catch any variant by the time it has reached 1% prevalence in the population of infected individuals.
+\textbf{The desired variant prevalence ($p_{V_1}$)}. As stated above, we want to ensure we catch any variant by the time it has reached 1% prevalence in the population of infected individuals.
 
 \textbf{Initial variant prevalence ($p_0$)}. The method we will use for sample size calculations assumes logistic growth of any new variants of concern, with a starting prevalence and growth rate that can be specified. This initial prevalence depends on the number of simultaneous variant introductions into our country of interest as well as the total infected population size. Over the last year, we have observed a total of between 5,000 and 10,000 total cases of Pathogen X in our country at any given time, and we expect the number of cases to be similar if a new variant is introduced. Because of the complex relationship between initial prevalence and the shape of the logistic growth curve, we will estimate the required sample size in two scenarios: (1) if a new variant could be introduced via a single index case, at a time when nearly 10,000 people are infected (initial prevalence $=1/10000$); and (2) if 5 different travelers are be infected by a new variant and bring it into the country in the same week, at a time when only 5,000 individuals are infected (initial prevalence $=5/5000=1/1000$).
 
@@ -80,21 +80,21 @@ In both cases, there are a few more parameters we need to provide:
 
 We now have all of the values we need to estimate the sample size needed for detecting a variant by the time it reaches 1% in the population, assuming weekly periodic sampling. Additionally, it is important to remember that the number of required **sequences** is not the same as the number of required **samples**, because of the sequencing success rate ($\omega$) discussed above. Both the Excel spreadsheet and `phylosamp` R package output the number of samples required, taking into account that not all samples selected for sequencing will result in high quality samples suitable for variant characterization:
 
-* Least conservative scenario with low initial prevalence: $prob=0.75$, $p_{\text{detect}}=0.01$, $p_0=1/10000$, $r=0.1$, coefficient of detection $=1.059$ $\implies$ 119 samples should be sequenced per week (17 per day)
+* Least conservative scenario with low initial prevalence: $prob=0.75$, $p_{V_1}=0.01$, $p_0=1/10000$, $r=0.1$, $\omega=0.8$, coefficient of detection $=1.059$ $\implies$ 112 samples should be sequenced per week (16 per day)
 
-* Least conservative scenario with high initial prevalence: $prob=0.75$, $p_{\text{detect}}=0.01$, $p_0=1/1000$, $r=0.1$, coefficient of detection $=1.059$ $\implies$ 126 samples should be sequenced per week (18 per day)
+* Least conservative scenario with high initial prevalence: $prob=0.75$, $p_{V_1}=0.01$, $p_0=1/1000$, $r=0.1$, $\omega=0.8$, coefficient of detection $=1.059$ $\implies$ 119 samples should be sequenced per week (17 per day)
 
-* Most conservative scenario with low initial prevalence: $prob=0.95$, $p_{\text{detect}}=0.01$, $p_0=1/10000$, $r=0.2$, coefficient of detection $=0.779$ $\implies$ 574 samples should be sequenced per week (82 per day)
+* Most conservative scenario with low initial prevalence: $prob=0.95$, $p_{V_1}=0.01$, $p_0=1/10000$, $r=0.2$, $\omega=0.8$, coefficient of detection $=0.779$ $\implies$ 567 samples should be sequenced per week (81 per day)
 
-* Most conservative scenario with high initial prevalence: $prob=0.95$, $p_{\text{detect}}=0.01$, $p_0=1/1000$, $r=0.2$, coefficient of detection $=0.779$ $\implies$ 686 samples should be sequenced per week (98 per day)
+* Most conservative scenario with high initial prevalence: $prob=0.95$, $p_{V_1}=0.01$, $p_0=1/1000$, $r=0.2$, $\omega=0.8$, coefficient of detection $=0.779$ $\implies$ 679 samples should be sequenced per week (97 per day)
 
-Based on these calculations, we need to be sequencing between 119 and 686 samples per week in order to detect a new variant by the time it reaches 1% in the population. As this is a rather wide range, we can use the reverse functionality of the sample size calculation method to determine the probability of detecting a variant given a fixed number of samples and most conservative parameter values.
+Based on these calculations, we need to be sequencing between 112 and 679 samples per week in order to detect a new variant by the time it reaches 1% in the population. As this is a rather wide range, we can use the reverse functionality of the sample size calculation method to determine the probability of detecting a variant given a fixed number of samples and most conservative parameter values.
 
 \section{Estimating the probability of detection}
 
-Given the recommendation of 119-686 samples per week, the government of our country of interest has decided that funding will be allocated to support sequencing of 200 Pathogen X samples per week. Given our most conservative scenario of a coefficient of detection of 0.779 and a growth rate of 0.2, we can use the "Detect (Periodic) - Confidence" tab of the Excel spreadsheet (or the `prob_varfreq_detect` function in the `phylosamp` package) to calculate the probability of detecting a variant before it crosses the 1% prevalence threshold in the population.
+Given the recommendation of 112-679 samples per week, the government of our country of interest has decided that funding will be allocated to support sequencing of 200 Pathogen X samples per week. Given our most conservative scenario of a coefficient of detection of 0.779 and a growth rate of 0.2, we can use the "Detect (Periodic) - Confidence" tab of the Excel spreadsheet (or the `vartrack_prob_detect()` function in the `phylosamp` package) to calculate the probability of detecting a variant before it crosses the 1% prevalence threshold in the population.
 
-In both the high and low initial prevalence scenarios, the probability of detection (assuming roughly 28 samples selected per day, to be sequenced in weekly batches) remains above 57% even using the most conservative parameters. Furthermore, the probability of detecting a new variant by the time it reaches 2% in the population is approximately 85\% in both scenarios, with numbers approaching 99\% chance of detection before the variant hits 5\% prevalence. These values may be sufficient for country officials to feel confident in their ability to detect a variant soon after it is introduced regardless of its biological properties; if it is not, the calculations can simply be repeated with a higher number of weekly samples.
+In both the high and low initial prevalence scenarios, the probability of detection (assuming roughly 28 samples selected per day, to be sequenced in weekly batches) remains above 57\% even using the most conservative parameters. Furthermore, the probability of detecting a new variant by the time it reaches 2\% in the population is approximately 85\% in both scenarios, with numbers approaching 99\% chance of detection before the variant hits 5\% prevalence. These values may be sufficient for country officials to feel confident in their ability to detect a variant soon after it is introduced regardless of its biological properties; if it is not, the calculations can simply be repeated with a higher number of weekly samples.
 
 Of course, there are many assumptions that underlie these calculations, the most obvious being that the weekly batch of samples for sequencing are assumed to be well-distributed across the days of the week, and that they capture all regions or ports of entry into the country. Even so, this method provides sampling guideposts that can be applied in a variety of settings. For example, it is clear from the simple calculations above that 100 samples per week would be unlikely to be particularly informative for detecting new variants early and with high confidence.
 
