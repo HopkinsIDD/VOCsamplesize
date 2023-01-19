@@ -41,6 +41,6 @@ options(tinytex.verbose = TRUE)
 \addsection{3}{Supplemental Text 2: Worked Example}{12}
 \addsubsection{}{Variant-specific parameter estimation}{12}
 \addsubsection{}{The coefficient of detection ratio}{13}
-\addsubsection{}{Sample size calculations}{14}
+\addsubsection{}{Sample size calculations}{13}
 \addsubsection{}{Estimating the probability of detection}{15}
 \addsection{4}{Supplemental Data 1: Variant Sampling Workbook (.xlsx)}{}
