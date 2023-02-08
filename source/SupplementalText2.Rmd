@@ -36,9 +36,9 @@ Now that we've identified our surveillance goals, we need to estimate some basic
 
 \section{Variant-specific parameter estimation}
 
-\textbf{The asymptomatic rate ($\alpha$)}. So far, epidemiologists have determined that the asymptomatic rate of Pathogen X has ranged from 30-40\%. The currently circulating variant has an asymptomatic rate of 30\%. Given this, we want to plan for variants that could have asymptomatic rates ranging from 25-45\%. In Figure S2, we can see that a lower asymptomatic rate causes enrichment of the variant in sampled infections; conversely, a higher asymptomatic rate would artificially deplete samples belonging to the variant of interest in the pool of detected infections. Therefore, an asymptomatic rate of 25\% represents the least conservative scenario (since enrichment of a variant of interest would mean fewer sequences are required to detect it) while an asymptomatic rate of 45\% represents the most conservative scenario.
+\textbf{The asymptomatic rate ($\psi$)}. So far, epidemiologists have determined that the asymptomatic rate of Pathogen X has ranged from 30-40\%. The currently circulating variant has an asymptomatic rate of 30\%. Given this, we want to plan for variants that could have asymptomatic rates ranging from 25-45\%. In Figure S2, we can see that a lower asymptomatic rate causes enrichment of the variant in sampled infections; conversely, a higher asymptomatic rate would artificially deplete samples belonging to the variant of interest in the pool of detected infections. Therefore, an asymptomatic rate of 25\% represents the least conservative scenario (since enrichment of a variant of interest would mean fewer sequences are required to detect it) while an asymptomatic rate of 45\% represents the most conservative scenario.
 
-\textbf{The testing rate ($\beta$)}. Given the widespread availability of rapid antigen tests for Pathogen X, we assume that only 50\% of symptomatic infections (of any variant) are tested, and only 10\% of asymptomatic infections are detected and samples sent to national public health laboratories. We anticipate that testing rates could drop as low as 40\% (symptomatic) / 5\% (asymptomatic) as the population becomes increasingly desensitized to disease spread. Because of the complex relationship between testing rates and sampling bias, we'll explore these two scenarios independently when performing sample size calculations.
+\textbf{The testing rate ($\tau$)}. Given the widespread availability of rapid antigen tests for Pathogen X, we assume that only 50\% of symptomatic infections (of any variant) are tested, and only 10\% of asymptomatic infections are detected and samples sent to national public health laboratories. We anticipate that testing rates could drop as low as 40\% (symptomatic) / 5\% (asymptomatic) as the population becomes increasingly desensitized to disease spread. Because of the complex relationship between testing rates and sampling bias, we'll explore these two scenarios independently when performing sample size calculations.
 
 \textbf{The testing sensitivity ($\phi$)}. The current gold-standard PCR test for Pathogen X has a sensitivity of 95\% for the currently circulating variant. Historical data shows this rate has changed very little between variants. However, to account for the possibility that a future variant may significantly change the viral load present in patient samples or mutate in such a way that tests temporarily become less effective (until an updated PCR target can be developed), we will perform sample size calculations assuming no change in sensitivity (least conservative scenario) as well as a drop in sensitivity down to 90\% (most conservative scenario, see Figure S2).
 
@@ -54,13 +54,13 @@ When calculating the coefficient of detection, keep in mind that the $\gamma$ pa
 
 We can provide the remaining parameters as follows. (Note that $V_1$ represents the future variant we want to capture and $V_2$ parameters correspond to the general pathogen population.)
 
-* Least conservative scenario assuming higher testing rate: $\alpha_{V_1}=0.25$, $\alpha_{V_2}=0.3$, $\beta_a=0.1$, $\beta_s=0.5$ $\implies$ coefficient of detection ratio $=1.053$.
+* Least conservative scenario assuming higher testing rate: $\psi_{V_1}=0.25$, $\psi_{V_2}=0.3$, $\tau_a=0.1$, $\tau_s=0.5$ $\implies$ coefficient of detection ratio $=1.053$.
 
-* Least conservative scenario assuming lower testing rate: $\alpha_{V_1}=0.25$, $\alpha_{V_2}=0.3$, $\beta_a=0.05$, $\beta_s=0.4$ $\implies$ coefficient of detection ratio $=1.059$.
+* Least conservative scenario assuming lower testing rate: $\psi_{V_1}=0.25$, $\psi_{V_2}=0.3$, $\tau_a=0.05$, $\tau_s=0.4$ $\implies$ coefficient of detection ratio $=1.059$.
 
-* Most conservative scenario assuming higher testing rate: $\alpha_{V_1}=0.45$, $\alpha_{V_2}=0.3$, $\phi_{V_1}=0.90$, $\phi_{V_2}=0.95$, $\beta_a=0.1$, $\beta_s=0.5$ $\implies$ coefficient of detection ratio $=0.798$.
+* Most conservative scenario assuming higher testing rate: $\psi_{V_1}=0.45$, $\psi_{V_2}=0.3$, $\phi_{V_1}=0.90$, $\phi_{V_2}=0.95$, $\tau_a=0.1$, $\tau_s=0.5$ $\implies$ coefficient of detection ratio $=0.798$.
 
-* Most conservative scenario assuming lower testing rate: $\alpha_{V_1}=0.45$, $\alpha_{V_2}=0.3$, $\phi_{V_1}=0.90$, $\phi_{V_2}=0.95$, $\beta_a=0.05$, $\beta_s=0.4$ $\implies$ coefficient of detection ratio $=0.779$.
+* Most conservative scenario assuming lower testing rate: $\psi_{V_1}=0.45$, $\psi_{V_2}=0.3$, $\phi_{V_1}=0.90$, $\phi_{V_2}=0.95$, $\tau_a=0.05$, $\tau_s=0.4$ $\implies$ coefficient of detection ratio $=0.779$.
 
 Given these results, we can move forward to sample size calculations with two values of the coefficient of detection ratio to test: 0.779 (most conservative scenario) and 1.059 (least conservative scenario).
 
@@ -80,13 +80,13 @@ In both cases, there are a few more parameters we need to provide:
 
 We now have all of the values we need to estimate the sample size needed for detecting a variant by the time it reaches 1% in the population, assuming weekly periodic sampling. Additionally, it is important to remember that the number of required **sequences** is not the same as the number of required **samples**, because of the sequencing success rate ($\omega$) discussed above. Both the Excel spreadsheet and `phylosamp` R package output the number of samples required, taking into account that not all samples selected for sequencing will result in high quality samples suitable for variant characterization:
 
-* Least conservative scenario with low initial prevalence: $prob=0.75$, $p_{V_1}=0.01$, $p_0=1/10000$, $r=0.1$, $\omega=0.8$, coefficient of detection $=1.059$ $\implies$ 112 samples should be sequenced per week (16 per day)
+* Least conservative scenario with low initial prevalence: $prob=0.75$, $p_{V_1}=0.01$, $p_{0_{V_1}}=1/10000$, $r_{V_1}=0.1$, $\omega=0.8$, coefficient of detection $=1.059$ $\implies$ 112 samples should be sequenced per week (16 per day)
 
-* Least conservative scenario with high initial prevalence: $prob=0.75$, $p_{V_1}=0.01$, $p_0=1/1000$, $r=0.1$, $\omega=0.8$, coefficient of detection $=1.059$ $\implies$ 119 samples should be sequenced per week (17 per day)
+* Least conservative scenario with high initial prevalence: $prob=0.75$, $p_{V_1}=0.01$, $p_{0_{V_1}}=1/1000$, $r_{V_1}=0.1$, $\omega=0.8$, coefficient of detection $=1.059$ $\implies$ 119 samples should be sequenced per week (17 per day)
 
-* Most conservative scenario with low initial prevalence: $prob=0.95$, $p_{V_1}=0.01$, $p_0=1/10000$, $r=0.2$, $\omega=0.8$, coefficient of detection $=0.779$ $\implies$ 567 samples should be sequenced per week (81 per day)
+* Most conservative scenario with low initial prevalence: $prob=0.95$, $p_{V_1}=0.01$, $p_{0_{V_1}}=1/10000$, $r_{V_1}=0.2$, $\omega=0.8$, coefficient of detection $=0.779$ $\implies$ 567 samples should be sequenced per week (81 per day)
 
-* Most conservative scenario with high initial prevalence: $prob=0.95$, $p_{V_1}=0.01$, $p_0=1/1000$, $r=0.2$, $\omega=0.8$, coefficient of detection $=0.779$ $\implies$ 679 samples should be sequenced per week (97 per day)
+* Most conservative scenario with high initial prevalence: $prob=0.95$, $p_{V_1}=0.01$, $p_{0_{V_1}}=1/1000$, $r_{V_1}=0.2$, $\omega=0.8$, coefficient of detection $=0.779$ $\implies$ 679 samples should be sequenced per week (97 per day)
 
 Based on these calculations, we need to be sequencing between 112 and 679 samples per week in order to detect a new variant by the time it reaches 1% in the population. As this is a rather wide range, we can use the reverse functionality of the sample size calculation method to determine the probability of detecting a variant given a fixed number of samples and most conservative parameter values.
 

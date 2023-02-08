@@ -200,7 +200,7 @@ df <- data.frame(b)
 
 for (c in c_ratios){
   prob <- apply(b,1,function(x) phylosamp::vartrack_prob_detect(
-    n=x["n"][[1]],t=x["t"][[1]],p0=t0,r=r,c_ratio=c,omega=1,sampling_freq="cont"))
+    n=x["n"][[1]],t=x["t"][[1]],p0_v1=t0,r_v1=r,c_ratio=c,omega=1,sampling_freq="cont"))
   df <- data.frame(df,prob)
 }
 

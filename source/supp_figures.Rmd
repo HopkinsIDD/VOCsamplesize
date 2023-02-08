@@ -231,7 +231,7 @@ colnames(b) <- c("t","n")
 df <- data.frame(b)
 for (i in 1:length(c_ratios)){
   prob <- apply(b,1,function(x) phylosamp::vartrack_prob_detect(
-    n=x["n"][[1]],t=x["t"][[1]],p0=t0[i],r=r[i],c_ratio=c_ratios[i],
+    n=x["n"][[1]],t=x["t"][[1]],p0_v1=t0[i],r_v1=r[i],c_ratio=c_ratios[i],
     omega=1,sampling_freq="cont"))
   df <- data.frame(df,prob)
 }
