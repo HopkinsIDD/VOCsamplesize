@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/442231712.svg)](https://zenodo.org/badge/latestdoi/442231712)
+
 # VOCsamplesize
 
 Code for Sample Size Calculations for Variant Surveillance in the Presence of Biological and Systematic Biases:
