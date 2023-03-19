@@ -26,7 +26,7 @@ options(tinytex.verbose = TRUE)
 
 \setcounter{page}{12}
 
-\section*{Supplemental Text 2: Worked Example}
+\section*{Supplemental Data 2: Sample size calculation worked example}
 
 In the text below, we apply our sampling methodology to prepare for the emergence of a new variant of a SARS-CoV-2-like pathogen into a fictional population, based on current whole genome sequencing capacity and experience with previous variants of concern. All calculations described can be easily performed using our Excel spreadsheet (Supplemental Data 1) or R package, `phylosamp`.
 

@@ -26,7 +26,7 @@ options(tinytex.verbose = TRUE)
 
 \setcounter{page}{7}
 
-\section*{Supplemental Text 1: Derivations}
+\section*{Supplemental Data 1: Derivations of sample size calculation equations}
 
 \section{Calculating variant prevalences from an observed sample}
 

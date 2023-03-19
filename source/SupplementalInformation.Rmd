@@ -35,12 +35,12 @@ options(tinytex.verbose = TRUE)
 \addsubsection{}{Figure S3. Validation of the binomial sampling approximation.}{4}
 \addsubsection{}{Figure S4. Sample size needed for variant detection and prevalence estimation with 50\% confidence.}{5}
 \addsubsection{}{Figure S5. Sample size needed for detection of a variant growing in prevalence.}{6}
-\addsection{2}{Supplemental Text 1: Derivations}{7}
+\addsection{2}{Supplemental Data 1: Derivations of sample size calculation equations}{7}
 \addsubsection{}{Calculating variant prevalence from an observed sample}{7}
 \addsubsection{}{Sample size calculations with continuous surveillance}{9}
-\addsection{3}{Supplemental Text 2: Worked Example}{12}
+\addsection{3}{Supplemental Data 2: Sample size calculation worked example}{12}
 \addsubsection{}{Variant-specific parameter estimation}{12}
 \addsubsection{}{The coefficient of detection ratio}{13}
 \addsubsection{}{Sample size calculations}{13}
 \addsubsection{}{Estimating the probability of detection}{15}
-\addsection{4}{Supplemental Data 1: Variant Sampling Workbook (.xlsx)}{}
+\addsection{4}{Supplemental Data 3: Variant sampling workbook (.xlsx)}{}
